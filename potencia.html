@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Potencia Activa</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        .results {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .results p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .results span {
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Potencia Activa</h2>
+
+    <div class="input-group">
+        <label for="tipoSistema">Tipo de Sistema:</label>
+        <select id="tipoSistema" onchange="actualizarFactorPotencia()">
+            <option value="monofasico">Monofásico</option>
+            <option value="trifasico">Trifásico</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="V">Voltaje (V):</label>
+        <input type="number" id="V" placeholder="Volts">
+    </div>
+
+    <div class="input-group">
+        <label for="I">Corriente (I):</label>
+        <input type="number" id="I" placeholder="Amperes">
+    </div>
+
+    <div class="input-group">
+        <label for="cosPhi">Factor de Potencia (cosφ):</label>
+        <input type="number" id="cosPhi" value="1" step="0.01" min="0" max="1">
+    </div>
+
+    <div class="button-group">
+        <button onclick="calcularPotencia()">Calcular Potencia Activa</button>
+    </div>
+
+    <div class="results" id="resultadoDiv" style="display: none;">
+        <p>Potencia Activa (P): <span id="resultadoValor"></span></p>
+    </div>
+</div>
+
+<script>
+    function actualizarFactorPotencia() {
+        const tipoSistema = document.getElementById('tipoSistema').value;
+        const inputCosPhi = document.getElementById('cosPhi');
+
+        if (tipoSistema === 'monofasico') {
+            inputCosPhi.value = 1;
+        } else { // trifasico
+            inputCosPhi.value = 0.93;
+        }
+    }
+
+    function calcularPotencia() {
+        const tipoSistema = document.getElementById('tipoSistema').value;
+        const V = parseFloat(document.getElementById('V').value);
+        const I = parseFloat(document.getElementById('I').value);
+        const cosPhi = parseFloat(document.getElementById('cosPhi').value);
+
+        if (isNaN(V) || isNaN(I) || isNaN(cosPhi)) {
+            alert("Por favor, ingrese todos los valores numéricos.");
+            return;
+        }
+        
+        let potencia_calculada = 0;
+
+        if (tipoSistema === 'monofasico') {
+            // Fórmula Potencia Activa Monofásica: P = V * I * cosφ
+            potencia_calculada = V * I * cosPhi;
+        } else {
+            // Fórmula Potencia Activa Trifásica: P = V * I * sqrt(3) * cosφ
+            potencia_calculada = V * I * Math.sqrt(3) * cosPhi;
+        }
+
+        const resultadoDiv = document.getElementById('resultadoDiv');
+        const resultadoValor = document.getElementById('resultadoValor');
+
+        resultadoValor.textContent = `${potencia_calculada.toFixed(2)} Watts`;
+        resultadoDiv.style.display = 'block';
+    }
+
+    // Inicializar el valor de cosPhi al cargar la página
+    window.onload = actualizarFactorPotencia;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+const datosConductores = {
+            'H07V': {
+                nombre: 'H07V-U / H07V-R / H07V-K',
+                caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o recubierto  de una capa metálica; sólido clase 1, cableado clase 2, flexible clase 5, con aislación de policloruro de vinilo PVC/C.',
+                uso: 'Apto para ser instalado en ductos y molduras o bandejas tipo liviana en ambiente seco. En circuitos de baja tensión en instalaciones fijas.',
+                tempMax: '70 °C',
+                tension: '450/750 V',
+                aislamiento: 'PVC',
+                cubierta: 'No tiene'
+            },
+            'H07Z1': {
+                nombre: 'H07Z1-U / H07Z1-R / H07Z1-K',
+                caracteristicas: 'Conductor eléctrico unipolar aislado, sin cubierta, no propagador del incendio, libre de halógenos y con baja emisión de humos y gases corrosivos cuando están expuestos al fuego; construido de cobre recocido, desnudo o recubierto de una capa metálica; sólido clase 1, cableado clase 2 y flexible clase 5, con aislación de material termoplástico del tipo TI 7.',
+                uso: 'Apto para ser usado en lugares de reunión de personas. Puede ser instalado en ductos y molduras o bandejas tipo liviana. En circuitos de baja tensión en instalaciones fijas, en ambiente seco. No Puede ser utilizados como alimentador, ni subalimentador.',
+                tempMax: '70 °C',
+                tension: '450/750 V',
+                aislamiento: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos',
+                cubierta: 'No tiene'
+            },
+			'THHN': {
+				nombre: 'THHN',
+				caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado o comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+				uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+				tempMax: '90 °C',
+				tension: '600 V',
+				aislamiento: 'PVC',
+				cubierta: 'Nylon o similar'
+			},
+			'THWN-2': {
+				nombre: 'THWN-2',
+				caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado ó comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+				uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos y húmedos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+				tempMax: '90 °C',
+				tension: '600 V',
+				aislamiento: 'PVC',
+				cubierta: 'Nylon o similar'
+			},
+			'THWN': {
+				nombre: 'THWN',
+				caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado ó comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+				uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos y húmedos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+				tempMax: '75 °C',
+				tension: '600 V',
+				aislamiento: 'PVC',
+				cubierta: 'Nylon o similar'
+			},
+			'RV': {
+				nombre: 'RV',
+				caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla; construido de cobre recocido, desnudo o recubierto de una capa metálica; sólido clase 1 o cableado clase 2 cableado, con aislación de polietileno reticulado (XLPE) y cubierta termoplástica de cloruro de polivinilo (PVC) tipo ST2.',
+				uso: 'Apto para ser instalado en ductos, en bandejas, en canastillo, en escalerillas (solo tipo /TC) y al aire libre. En circuitos de distribución en baja tensión, como alimentador o subalimentador.',
+				tempMax: '90 °C',
+				tension: '600/1000 V',
+				aislamiento: 'XLPE',
+				cubierta: 'PVC'
+			},
+			'RV-K': {
+				nombre:'RV-K',
+				caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de polietileno reticulado (XLPE) y cubierta termoplástica de cloruro de polivinilo (PVC) designación ST2.',
+				uso: 'Apto para ser instalado directamente enterrado, en ductos, en bandejas,en canastillo, en escalerillas (solo tipo /TC) y al aire libre. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para tendido fijo.',
+				tempMax: '90 °C',
+				tension: '600/1000 V',
+				aislamiento: 'XLPE',
+				cubierta: 'PVC'
+			},
+			'RZ1': {
+				nombre: 'RZ1',
+				caracteristicas:'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla, retardante a la llama, no propagador de incendio, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; cableado, con aislación de polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos.',
+				uso: 'Apto para ser usado en lugares de reunión de personas.Puede ser instalado en ductos, en bandejas, en escalerillas en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador.',
+				tempMax: '90 °C',
+				tension: '600/1000 V',
+				aislamiento: 'XLPE',
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+			},
+			'RZ1-K': {
+				nombre: 'RZ1-K',
+				caracteristicas:'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla,retardante a la llama, no propagador de incendio, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos.',
+				uso: 'Apto para ser usado en lugares de reunión de personas. Puede ser instalado en ductos, en bandejas, en escalerillas, en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para instalación fija.',
+				tempMax: '90 °C',
+				tension: '600/1000 V',
+				aislamiento: 'XLPE',
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+			},
+			'RZ1-K(AS+)': {
+				nombre: 'Rz1-k (AS+)',
+				caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla, retardante a la llama, no propagador de incendio, resistente al fuego, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de cinta de mica y polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos',
+				uso: 'Apto para instalaciones de equipos de seguridad que deban mantenerse en servicio durante un incendio y enlocales donde se requiera una baja emisión de humos y gases corrosivos en caso de incendio. Apto para instalaciones en lugares de reunión de personas. Puede ser instalado en ductos, en bandejas, en escalerillas, en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para instalación fija.',
+				tempMax: '90 °C',
+				tension: '600/1000 V',
+				aislamiento: 'Cinta Mica + XLPE',
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+			},
+			'H03VV': {
+				nombre: 'H03VV-F / H03VVH2-F',
+				caracteristicas: 'Conductor eléctrico tipo cordón flexible; circular o plano, construido con 2 o 3 conductores de cobre recocido, desnudo o recubierto de una capa metálica; clase 5, con aislación de policloruro de vinilo PVC/D para temperatura de servicio de 70 ºC, con cubierta o revestimiento de PVC/ST5 y rango de voltaje de 300/300 volts.',
+				uso: 'Apto para ser usado en instalaciones móviles domiciliarias y para alimentación de electrodomésticos con un esfuerzo mecánico ligero. Puede ser usado en interior, en recintos secos y/o húmedos (no apto para instalación fija o sumergido).',
+				tempMax: '70 °C',
+				tension: '300/300 V',
+				aislamiento: 'PVC',
+				cubierta: 'PVC'
+			},
+			'H05VV': {
+				nombre: 'H05VV-F / H05VVH2-F',
+				caracteristicas: 'Conductor eléctrico tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de policloruro de vinilo PVC/D para temperatura de servicio de 70 ºC, con cubierta o revestimiento de PVC/ST5 y rango de voltaje de 300/500 volts.',
+				uso: 'Apto para ser usado en instalaciones móviles domiciliarias y para alimentación de electrodomésticos con un esfuerzo mecánico medio. Puede ser usado en interior, en recintos secos y/o húmedos (no apto para instalaciones sumergidas).',
+				tempMax: '70 °C',
+				tension: '300/500 V',
+				aislamiento: 'PVC',
+				cubierta: 'PVC'
+			},
+			'H05RR': {
+				nombre: 'H05RR-F',
+				caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de goma tipo SE3.',
+				uso: 'Apto para ser usado en dispositivos eléctricos ligeros que no estén sometidos a grandes tensiones mecánicas, equipos de mano, electrodomésticos de uso ligero. Puede ser usado en salas secas y húmedas. Solo uso temporal en el exterior.No apto para instalaciones industriales/comerciales o agrícolas. No indicado para alimentar herramientas eléctricas industriales.',
+				tempMax: '60 °C',
+				tension: '300/500 V',
+				aislamiento: 'EPR, EPDM O similar',
+				cubierta: 'EPR, EPDM O similar'
+			},
+			'H05RN': {
+				nombre: 'H05RN-F',
+				caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de policloropreno u otro elastómero sintético equivalente, tipo SE4.',
+				uso: 'Apto para alimentar dispositivos ligeros de bajo estrés mecánico. Puede ser usado permanentemente en el exterior, con esfuerzo mecánico normal.',
+				tempMax: '60 °C',
+				tension: '300/500 V',
+				aislamiento: 'EPR, EPDM O similar',
+				cubierta: 'Neopreno O similar'
+			},
+			'H07RN' : {
+				nombre: 'H07RN-F',
+				caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de policloropreno u otro elastómero sintético equivalente, tipo SE4.',
+				uso: 'Apto para ser usado en equipos industriales en servicio móvil, para esfuerzo mecánico medio. Puede ser usado en ambiente seco o húmedo así como exteriores. Puede ser usado en instalaciones provisionales.',
+				tempMax: '60 °C',
+				tension: '450/750 V',
+				aislamiento: 'EPR, EPDM O similar',
+				cubierta: 'Neopreno O similar'
+			},
+			'NYIFY' : {
+				nombre: 'NYIFY',
+				caracteristicas: 'Conductor eléctrico plano, construido con 2 o 3 conductores de cobre recocido sólidos, con aislación de PVC y cubierta de PVC para temperatura de servicio de 70 ºC, para un rango de voltaje de 380 volts máximo.´,
+				uso: 'Apto para ser usado en instalaciones domiciliarias en ambientes interiores, sobrepuesto, no necesitan ducto.',
+				tempMax: '70 °C',
+				tension: '380 V',
+				aislamiento: 'PVC',
+				cubierta: 'PVC'
+			},
+			'STP' : {
+				nombre: 'STP-1 / STP-2',
+				caracteristicas: 'Conductor eléctrico flexible; plano, construido con 2 o 3 conductores de cobre recocido, desnudo flexible, con aislación integral de policloruro de vinilo para temperatura de servicio de 70 ºC, para un rango de voltaje de 300 volts máximo.',
+				uso: 'Apto para ser usado en instalaciones móviles domiciliarias con un esfuerzo mecánico ligero.No puede ser usado en circuitos de instalación fija interior o exterior, no debe ser engrapado o clavado a las estructuras sólidas de la instalación o edificación, no debe ser usado en extensiones para enchufes',
+				tempMax: '70 °C',
+				tension: '300 V',
+				aislamiento: 'PVC',
+				cubierta: 'No tiene'
+			},
+			'Acometidas' : {
+				nombre: 'Acometidas',
+				caracteristicas: 'Conductor cableado o alambre de cobre de temple duro, clase 1, aislación de compuesto Polietileno extruido de color negro, y resistencia a la intemperie',
+				uso: 'En servicios aéreos como líneas de distribución y en acometidas de empalme',
+				tempMax: '75 °C',
+				tension: '600 V',
+				aislamiento: 'PE',
+				cubierta: 'No tiene'
+			},
+			'SF-1' : {
+				nombre: 'SF-1',
+				caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o estañado; sólido o 7 hebras, cableado clase B, con aislación de silicona y malla de fibra de vidrio.´,
+				uso: 'Cableado del Enclavamiento de Puertas de Montacargas, resistentes a las llamas y adecuados para una temperatura máxima de 200 °C',
+				tempMax: '200 °C',
+				tension: '300 V',
+				aislamiento: 'Silicona para temperatura de 200 °C',
+				cubierta: 'Malla fibra de vidrio'
+			},
+			'SF-2' : {
+				nombre: 'SF-2',
+				caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o estañado; sólido o 7 hebras, cableado clase B, con aislación de silicona y malla de fibra de vidrio.',
+				uso: 'Cableado del Enclavamiento de Puertas de Montacargas, resistentes a las llamas y adecuados para una temperatura máxima de 200 °C',
+				tempMax: '200 °C',
+				tension: '600 V',
+				aislamiento: 'Silicona para temperatura de 200 °C',
+				cubierta: 'Malla fibra de vidrio'
+			},
+			'H1Z2Z2' : {
+				nombre: 'H1Z2Z2-K',
+				caracteristicas: 'Cables para instalaciones solares fotovoltaicas que han sido diseñados para resistir las exigentes condiciones ambientales que se producen en cualquier tipo de instalación fotovoltaica, ya sea fija, móvil, sobre tejado o de integración arquitectónica, conductor de cobre electrolítico estañado, clase 5 flexible, aislación libre de halógenos, cubierta ignifugada, resistencia a los impactos, a las grasas y aceites, resistencia a abrasión, resistencia a temperaturas ambientales extremas, rayos ultravioletas y al agua, No propagación de la llama Resistencia a los ataques químicos, Temperatura mínima de servicio: -40ºC Temperatura máxima del conductor: 120ºC Temperatura máxima en cortocircuito: 250ºC (máximo 5 s)',
+				uso: 'Cables flexibles aptos para servicios móviles y para instalación fija en tejado o de integración arquitectónica. Adecuados para la conexión entre paneles fotovoltaicos y desde los paneles al inversor de corriente continua a alterna. Nopuede ser usado en instalaciones Subterráneas.',
+				tempMax: '90 °C',
+				tension: '1800 V DC / 600 - 1000 V AC',
+				aislamiento: 'Elastómero termoestable libre de halógenos (Z) o Goma libre de halógenos (tipo XLEVA según UL / tipo EI6 según TÜV)',
+				cubierta: 'Elastómero termoestable libre de halógenos (Z) o Goma ignifugada (tipo XLEVA según UL / tipo EM8 según TÜV)'
+		};

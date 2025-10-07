@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Caída de Tensión (Vp)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .results {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .results p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .results span {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Caída de Tensión (Vp)</h2>
+
+    <div class="input-group">
+        <label for="tipoCalculo">Tipo de Sistema:</label>
+        <select id="tipoCalculo">
+            <option value="monofasico">Monofásico</option>
+            <option value="trifasico">Trifásico</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="S">Sección del Conductor (S):</label>
+        <input type="number" id="S" placeholder="mm²">
+    </div>
+
+    <div class="input-group">
+        <label for="L">Longitud (L):</label>
+        <input type="number" id="L" placeholder="Metros">
+    </div>
+
+    <div class="input-group">
+        <label for="I">Corriente (I):</label>
+        <input type="number" id="I" placeholder="Amperes">
+    </div>
+
+    <div class="button-group">
+        <button onclick="calcularVp()">Calcular Vp</button>
+    </div>
+
+    <div class="results" id="resultadoDiv" style="display: none;">
+        <p>Caída de Tensión (Vp): <span id="resultadoValor"></span></p>
+    </div>
+</div>
+
+<script>
+    function calcularVp() {
+        // Obtener la selección del tipo de sistema
+        const tipoSistema = document.getElementById('tipoCalculo').value;
+
+        // Obtener los valores de los campos de entrada
+        const S = parseFloat(document.getElementById('S').value);
+        const L = parseFloat(document.getElementById('L').value);
+        const I = parseFloat(document.getElementById('I').value);
+
+        // Validar que los campos no estén vacíos y que S no sea cero
+        if (isNaN(S) || isNaN(L) || isNaN(I)) {
+            alert("Por favor, ingrese todos los valores.");
+            return;
+        }
+
+        if (S === 0) {
+            alert("La sección del conductor (S) no puede ser cero.");
+            return;
+        }
+        
+        let vp_calculado = 0;
+
+        // Calcular Vp según el tipo de sistema seleccionado
+        if (tipoSistema === 'monofasico') {
+            // Fórmula Vp para Monofásico
+            vp_calculado = (2 * 0.018 * L * I) / S;
+        } else {
+            // Fórmula Vp para Trifásico
+            vp_calculado = (Math.sqrt(3) * 0.018 * L * I) / S;
+        }
+
+        // Mostrar el div de resultados y actualizar el contenido
+        const resultadoDiv = document.getElementById('resultadoDiv');
+        const resultadoValor = document.getElementById('resultadoValor');
+
+        resultadoValor.textContent = `${vp_calculado.toFixed(4)} Volts`;
+        resultadoDiv.style.display = 'block'; // Hacer visible el contenedor del resultado
+    }
+</script>
+
+</body>
+</html>

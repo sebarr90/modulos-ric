@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Secciones Eléctricas</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group, .radio-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .radio-group label {
+            font-weight: normal;
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid #eee;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .results p {
+            font-size: 1.2em;
+            color: #333;
+            margin: 0;
+        }
+        .results span {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Secciones</h2>
+
+    <div class="radio-group">
+        <label>Tipo de Sistema:</label>
+        <label><input type="radio" name="tipo_sistema" value="monofasico" checked> Monofásico</label>
+        <label><input type="radio" name="tipo_sistema" value="trifasico"> Trifásico</label>
+    </div>
+
+    <div class="input-group">
+        <label for="L">Longitud (L):</label>
+        <input type="number" id="L" placeholder="Metros">
+    </div>
+
+    <div class="input-group">
+        <label for="I">Corriente (I):</label>
+        <input type="number" id="I" placeholder="Amperes">
+    </div>
+
+    <div class="input-group">
+        <label for="Vp">Caída de Tensión (Vp):</label>
+        <input type="number" id="Vp" placeholder="Volts">
+    </div>
+
+    <button onclick="calcular()">Calcular</button>
+
+    <div class="results" id="resultadosDiv" style="display:none;">
+        <p><span id="resultadoTexto"></span></p>
+    </div>
+</div>
+
+<script>
+    function calcular() {
+        // Obtener los valores de los campos de entrada
+        const L = parseFloat(document.getElementById('L').value);
+        const I = parseFloat(document.getElementById('I').value);
+        const Vp = parseFloat(document.getElementById('Vp').value);
+        
+        // Obtener el tipo de sistema seleccionado
+        const tipoSistema = document.querySelector('input[name="tipo_sistema"]:checked').value;
+
+        // Validar que los campos no estén vacíos y que Vp no sea cero
+        if (isNaN(L) || isNaN(I) || isNaN(Vp)) {
+            alert("Por favor, ingrese todos los valores numéricos.");
+            return;
+        }
+
+        if (Vp === 0) {
+            alert("La caída de tensión (Vp) no puede ser cero.");
+            return;
+        }
+
+        let resultado = 0;
+        let etiqueta = "";
+
+        if (tipoSistema === "monofasico") {
+            // --- Cálculo de la fórmula S1 (Monofásica) ---
+            resultado = (2 * 0.018 * L * I) / Vp;
+            etiqueta = `Resultado Monofásico (S1): `;
+        } else {
+            // --- Cálculo de la fórmula S3 (Trifásica) ---
+            resultado = (Math.sqrt(3) * 0.018 * L * I) / Vp;
+            etiqueta = `Resultado Trifásico (S3): `;
+        }
+
+        // Mostrar el div de resultados y actualizar el contenido
+        const resultadosDiv = document.getElementById('resultadosDiv');
+        const resultadoTexto = document.getElementById('resultadoTexto');
+        
+        resultadoTexto.innerHTML = etiqueta + `<span style="color: #d9534f;">${resultado.toFixed(4)}</span>`;
+        resultadosDiv.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

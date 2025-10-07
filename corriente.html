@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora General de Corriente</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #ffc107;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e0a800;
+        }
+        .results {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .results p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .results span {
+            font-weight: bold;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora General de Corriente</h2>
+
+    <div class="input-group">
+        <label for="tipoSistema">Tipo de Sistema:</label>
+        <select id="tipoSistema" onchange="actualizarCamposDinamicos()">
+            <option value="monofasico">Monofásico</option>
+            <option value="trifasico">Trifásico</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="P" id="labelPotencia">Potencia (P):</label>
+        <input type="number" id="P" placeholder="Watts">
+    </div>
+
+    <div class="input-group">
+        <label for="V">Voltaje (V):</label>
+        <input type="number" id="V" placeholder="Volts">
+    </div>
+
+    <div class="input-group">
+        <label for="cosPhi">Factor de Potencia (cosφ):</label>
+        <input type="number" id="cosPhi" value="1" step="0.01" min="0" max="1">
+    </div>
+
+    <div class="button-group">
+        <button onclick="calcularCorriente()">Calcular Corriente</button>
+    </div>
+
+    <div class="results" id="resultadoDiv" style="display: none;">
+        <p>Corriente (I): <span id="resultadoValor"></span></p>
+    </div>
+</div>
+
+<script>
+    function actualizarCamposDinamicos() {
+        const tipoSistema = document.getElementById('tipoSistema').value;
+        const inputCosPhi = document.getElementById('cosPhi');
+        const labelPotencia = document.getElementById('labelPotencia');
+
+        if (tipoSistema === 'monofasico') {
+            inputCosPhi.value = 1;
+            labelPotencia.textContent = 'Potencia (P):';
+        } else { // trifasico
+            inputCosPhi.value = 0.93;
+            labelPotencia.textContent = 'Potencia Activa (P):'; // Etiqueta actualizada
+        }
+    }
+
+    function calcularCorriente() {
+        const tipoSistema = document.getElementById('tipoSistema').value;
+        const P = parseFloat(document.getElementById('P').value);
+        const V = parseFloat(document.getElementById('V').value);
+        const cosPhi = parseFloat(document.getElementById('cosPhi').value);
+
+        if (isNaN(P) || isNaN(V) || isNaN(cosPhi)) {
+            alert("Por favor, ingrese todos los valores numéricos.");
+            return;
+        }
+
+        if (V === 0 || cosPhi === 0) {
+            alert("El Voltaje y el Factor de Potencia no pueden ser cero.");
+            return;
+        }
+        
+        let corriente_calculada = 0;
+
+        if (tipoSistema === 'monofasico') {
+            corriente_calculada = P / (V * cosPhi);
+        } else {
+            corriente_calculada = P / (V * Math.sqrt(3) * cosPhi);
+        }
+
+        const resultadoDiv = document.getElementById('resultadoDiv');
+        const resultadoValor = document.getElementById('resultadoValor');
+
+        resultadoValor.textContent = `${corriente_calculada.toFixed(4)} Amperes`;
+        resultadoDiv.style.display = 'block';
+    }
+
+    // Inicializar los campos dinámicos al cargar la página
+    window.onload = actualizarCamposDinamicos;
+</script>
+
+</body>
+</html>

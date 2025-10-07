@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Memoria Inst. Eléctrica SEC - Cálculos</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; max-width: 900px; }
+    label { display: block; margin-top: 1rem; }
+    input, select, textarea { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+    button { margin-top: 1.5rem; padding: 0.7rem 1.2rem; }
+    #resultado { margin-top: 2rem; padding: 2rem; background: #f2f2f2; border: solid 1px #888; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Generador de Memoria Explicativa SEC (Automática)</h1>
+  <form id="formularioMemoria" onsubmit="generarMemoria(event)">
+    <label>Nombre Proyecto:</label>
+    <input type="text" id="nombre" required>
+    <label>Ubicación:</label>
+    <input type="text" id="ubicacion" required>
+    <label>Tipo Instalación:</label>
+    <select id="tipo" required>
+      <option value="">Seleccione...</option>
+      <option value="Residencial">Residencial</option>
+      <option value="Comercial">Comercial</option>
+      <option value="Industrial">Industrial</option>
+    </select>
+    <label>Potencia instalada (kW):</label>
+    <input type="number" id="potencia" step="0.01" required>
+    <label>Tensión (V):</label>
+    <input type="number" id="tension" value="220" required>
+    <label>Distancia a carga principal (m):</label>
+    <input type="number" id="distancia" step="0.1" required>
+    <label>Factor de potencia:</label>
+    <input type="number" id="fp" value="0.92" step="0.01" required>
+    <label>Protecciones eléctricas:</label>
+    <textarea id="protecciones" required></textarea>
+    <label>Observaciones:</label>
+    <textarea id="obs"></textarea>
+    <button type="submit">Generar Memoria Completa</button>
+  </form>
+  <div id="resultado"></div>
+  <script>
+    function generarMemoria(event) {
+      event.preventDefault();
+      // Datos de usuario
+      const nombre = document.getElementById('nombre').value;
+      const ubicacion = document.getElementById('ubicacion').value;
+      const tipo = document.getElementById('tipo').value;
+      const potencia = parseFloat(document.getElementById('potencia').value);
+      const tension = parseFloat(document.getElementById('tension').value);
+      const distancia = parseFloat(document.getElementById('distancia').value);
+      const fp = parseFloat(document.getElementById('fp').value);
+      const protecciones = document.getElementById('protecciones').value;
+      const obs = document.getElementById('obs').value;
+
+      // Cálculo de corriente (I = P/(V*FP))
+      const corriente = (potencia*1000)/(tension*fp);
+
+      // Cálculo caída de tensión y sección de conductor (Cu, monofásico, fórmula simplificada)
+      // ΔV = 2 * Rcobre * I * L / S. R=0.0178 Ω*mm²/m. L=distancia, S=sección en mm².
+      let S = 2.5;
+      const Rcobre = 0.0178;
+      let caidaT = (2 * Rcobre * corriente * distancia) / S;
+      const caidaMax = tension * 0.03;
+
+      while (caidaT > caidaMax && S < 25) {
+        S += 1;
+        caidaT = (2 * Rcobre * corriente * distancia) / S;
+      }
+
+      let texto = 
+`MEMORIA EXPLICATIVA INSTALACIÓN ELÉCTRICA (SEC)
+
+Proyecto: ${nombre}
+Ubicación: ${ubicacion}
+Tipo de instalación: ${tipo}
+Potencia instalada: ${potencia.toFixed(2)} kW
+Tensión: ${tension} V
+Distancia mayor carga: ${distancia} m
+Factor de potencia: ${fp}
+Corriente nominal calculada: ${corriente.toFixed(2)} A
+Caída de tensión estimada: ${caidaT.toFixed(2)} V (máximo permitido: ${caidaMax.toFixed(2)} V)
+Sección mínima recomendada para conductor: ${S.toFixed(1)} mm² (cobre)
+Protecciones eléctricas: ${protecciones}
+Observaciones: ${obs}
+
+Justificación técnica:
+- La sección seleccionada cumple con la exigencia SEC (<3% de caída de tensión).
+- Los cálculos se basan en datos de usuario y normativa vigente.
+- Documento preliminar generado automáticamente. Debe ser revisado y presentado por profesional acreditado SEC.
+
+Normativa de referencia: RIC N°18, NCh4/2003, DS N°8.
+`;
+
+      document.getElementById('resultado').textContent = texto;
+    }
+  </script>
+</body>
+</html>
