@@ -6,7 +6,8 @@ const datosConductores = {
                 tempMax: '70 °C',
                 tension: '450/750 V',
                 aislamiento: 'PVC',
-                cubierta: 'No tiene'
+                cubierta: 'No tiene',
+				tabla_ref: '70C'
             },
             'H07Z1': {
                 nombre: 'H07Z1-U / H07Z1-R / H07Z1-K',
@@ -15,7 +16,8 @@ const datosConductores = {
                 tempMax: '70 °C',
                 tension: '450/750 V',
                 aislamiento: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos',
-                cubierta: 'No tiene'
+                cubierta: 'No tiene',
+				tabla_ref: '70C'
             },
 			'THHN': {
 				nombre: 'THHN',
@@ -24,7 +26,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600 V',
 				aislamiento: 'PVC',
-				cubierta: 'Nylon o similar'
+				cubierta: 'Nylon o similar',
+				tabla_ref: '90C'
 			},
 			'THWN-2': {
 				nombre: 'THWN-2',
@@ -33,7 +36,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600 V',
 				aislamiento: 'PVC',
-				cubierta: 'Nylon o similar'
+				cubierta: 'Nylon o similar',
+				tabla_ref: '70C'
 			},
 			'THWN': {
 				nombre: 'THWN',
@@ -42,7 +46,8 @@ const datosConductores = {
 				tempMax: '75 °C',
 				tension: '600 V',
 				aislamiento: 'PVC',
-				cubierta: 'Nylon o similar'
+				cubierta: 'Nylon o similar',
+				tabla_ref: '70C'
 			},
 			'RV': {
 				nombre: 'RV',
@@ -51,7 +56,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600/1000 V',
 				aislamiento: 'XLPE',
-				cubierta: 'PVC'
+				cubierta: 'PVC',
+				tabla_ref: '90C'
 			},
 			'RV-K': {
 				nombre:'RV-K',
@@ -60,7 +66,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600/1000 V',
 				aislamiento: 'XLPE',
-				cubierta: 'PVC'
+				cubierta: 'PVC',
+				tabla_ref: '90C'
 			},
 			'RZ1': {
 				nombre: 'RZ1',
@@ -69,7 +76,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600/1000 V',
 				aislamiento: 'XLPE',
-				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+				tabla_ref: '90C'
 			},
 			'RZ1-K': {
 				nombre: 'RZ1-K',
@@ -78,7 +86,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600/1000 V',
 				aislamiento: 'XLPE',
-				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+				tabla_ref: '90C'
 			},
 			'RZ1-K(AS+)': {
 				nombre: 'Rz1-k (AS+)',
@@ -87,7 +96,8 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '600/1000 V',
 				aislamiento: 'Cinta Mica + XLPE',
-				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.'
+				cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+				tabla_ref: '90C'
 			},
 			'H03VV': {
 				nombre: 'H03VV-F / H03VVH2-F',
@@ -96,7 +106,8 @@ const datosConductores = {
 				tempMax: '70 °C',
 				tension: '300/300 V',
 				aislamiento: 'PVC',
-				cubierta: 'PVC'
+				cubierta: 'PVC',
+				tabla_ref: 'movil'
 			},
 			'H05VV': {
 				nombre: 'H05VV-F / H05VVH2-F',
@@ -105,7 +116,8 @@ const datosConductores = {
 				tempMax: '70 °C',
 				tension: '300/500 V',
 				aislamiento: 'PVC',
-				cubierta: 'PVC'
+				cubierta: 'PVC',
+				tabla_ref: 'movil'
 			},
 			'H05RR': {
 				nombre: 'H05RR-F',
@@ -114,7 +126,8 @@ const datosConductores = {
 				tempMax: '60 °C',
 				tension: '300/500 V',
 				aislamiento: 'EPR, EPDM O similar',
-				cubierta: 'EPR, EPDM O similar'
+				cubierta: 'EPR, EPDM O similar',
+				tabla_ref: 'movil'
 			},
 			'H05RN': {
 				nombre: 'H05RN-F',
@@ -123,7 +136,8 @@ const datosConductores = {
 				tempMax: '60 °C',
 				tension: '300/500 V',
 				aislamiento: 'EPR, EPDM O similar',
-				cubierta: 'Neopreno O similar'
+				cubierta: 'Neopreno O similar',
+				tabla_ref: 'movil'
 			},
 			'H07RN' : {
 				nombre: 'H07RN-F',
@@ -132,7 +146,8 @@ const datosConductores = {
 				tempMax: '60 °C',
 				tension: '450/750 V',
 				aislamiento: 'EPR, EPDM O similar',
-				cubierta: 'Neopreno O similar'
+				cubierta: 'Neopreno O similar',
+				tabla_ref: 'movil'
 			},
 			'NYIFY' : {
 				nombre: 'NYIFY',
@@ -141,7 +156,8 @@ const datosConductores = {
 				tempMax: '70 °C',
 				tension: '380 V',
 				aislamiento: 'PVC',
-				cubierta: 'PVC'
+				cubierta: 'PVC',
+				tabla_ref: '70C'
 			},
 			'STP' : {
 				nombre: 'STP-1 / STP-2',
@@ -150,7 +166,8 @@ const datosConductores = {
 				tempMax: '70 °C',
 				tension: '300 V',
 				aislamiento: 'PVC',
-				cubierta: 'No tiene'
+				cubierta: 'No tiene',
+				tabla_ref: 'movil'
 			},
 			'Acometidas' : {
 				nombre: 'Acometidas',
@@ -159,7 +176,8 @@ const datosConductores = {
 				tempMax: '75 °C',
 				tension: '600 V',
 				aislamiento: 'PE',
-				cubierta: 'No tiene'
+				cubierta: 'No tiene',
+				tabla_ref: '70C'
 			},
 			'SF-1' : {
 				nombre: 'SF-1',
@@ -168,7 +186,8 @@ const datosConductores = {
 				tempMax: '200 °C',
 				tension: '300 V',
 				aislamiento: 'Silicona para temperatura de 200 °C',
-				cubierta: 'Malla fibra de vidrio'
+				cubierta: 'Malla fibra de vidrio',
+				tabla_ref: 'SinTabla'
 			},
 			'SF-2' : {
 				nombre: 'SF-2',
@@ -177,7 +196,8 @@ const datosConductores = {
 				tempMax: '200 °C',
 				tension: '600 V',
 				aislamiento: 'Silicona para temperatura de 200 °C',
-				cubierta: 'Malla fibra de vidrio'
+				cubierta: 'Malla fibra de vidrio',
+				tabla_ref: 'SinTabla'
 			},
 			'H1Z2Z2' : {
 				nombre: 'H1Z2Z2-K',
@@ -186,5 +206,7 @@ const datosConductores = {
 				tempMax: '90 °C',
 				tension: '1800 V DC / 600 - 1000 V AC',
 				aislamiento: 'Elastómero termoestable libre de halógenos (Z) o Goma libre de halógenos (tipo XLEVA según UL / tipo EI6 según TÜV)',
-				cubierta: 'Elastómero termoestable libre de halógenos (Z) o Goma ignifugada (tipo XLEVA según UL / tipo EM8 según TÜV)'
+				cubierta: 'Elastómero termoestable libre de halógenos (Z) o Goma ignifugada (tipo XLEVA según UL / tipo EM8 según TÜV)',
+				tabla_ref: 'SinTabla'
+			}
 		};

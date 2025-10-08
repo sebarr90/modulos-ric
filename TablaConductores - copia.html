@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Conductor</title>
-   <style>
+    <title>Herramientas Eléctricas RIC</title>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
@@ -82,43 +83,10 @@
         }
     </style>
 </head>
+
 <body>
 
-    <h1>Selección de Conductor</h1>
-    <p>Basado en Tabla 4.4 del Pliego Técnico Normativo RIC N°04.</p>
-
-    <form id="calculatorForm">
-        <div class="form-group">
-            <label for="tipoConductor">1. Seleccione el Tipo de Conductor (según T° de servicio)</label>
-            <select id="tipoConductor" name="tipoConductor">
-                <option value="70">Conductores 70°C (H07V, H07Z1, THWN, NYIFY, ACOMETIDA)</option>
-                <option value="90">Conductores 90°C (THHN, RV, RV-K, RZ1, RZ1-K)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="metodoInstalacion">2. Seleccione el Método de Instalación</label>
-            <select id="metodoInstalacion" name="metodoInstalacion">
-                <option value="A1">Método de instalación A1. Temp. ambiente 30°C</option>
-                <option value="A2">Método de instalación A2. Temp. ambiente 30°C</option>
-                <option value="B1">Método de instalación B1. Temp. ambiente 30°C</option>
-                <option value="B2">Método de instalación B2. Temp. ambiente 30°C</option>
-                <option value="D1">Método de instalación D1. Temp. ambiente 30°C</option>
-                <option value="D2">Método de instalación D2. Temp. ambiente 30°C</option>
-                <option value="E">Método de instalación E. Temp. ambiente 30°C</option>
-                <option value="F">Método de instalación F. Temp. ambiente 30°C</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="corriente">3. Ingrese la Corriente del Circuito (Amperes)</label>
-            <input type="number" id="corriente" name="corriente" placeholder="Ej: 20" required min="1">
-        </div>
-        
-        <button type="button" onclick="calcularSeccion()">Calcular Sección</button>
-    </form>
-
-    <div id="resultado" class="hidden"></div>
+    <h1>Herramientas Eléctricas Normativas</h1>
 
     <section class="info-section">
         <h2>Notas y Consideraciones Normativas</h2>
@@ -166,13 +134,261 @@
             </tbody>
         </table>
     </section>
+    <section class="tool-section">
+        <h2>Calculadora por Tipo de Conductor</h2>
 
+        <div class="form-group">
+            <label for="conductorSelect">1. Seleccione el Conductor</label>
+            <select id="conductorSelect" onchange="seleccionarConductor()">
+                <option value="">-- Elija un tipo de conductor --</option>
+            </select>
+        </div>
+
+        <div id="conductor-details" class="hidden" style="font-size: 0.9em;"></div>
+
+        <div id="calculo-inputs" class="hidden">
+            <div class="form-group">
+                <label for="corriente">2. Ingrese la Corriente del Circuito (Amperes)</label>
+                <input type="number" id="corriente" name="corriente" placeholder="Ej: 25" required min="1">
+            </div>
+            <div class="form-group" id="metodo-instalacion-wrapper">
+                <label for="metodoInstalacion">3. Seleccione el Método de Instalación</label>
+                <select id="metodoInstalacion" name="metodoInstalacion">
+                <option value="A1">Método de instalación A1. Temp. ambiente 30°C</option>
+                <option value="A2">Método de instalación A2. Temp. ambiente 30°C</option>
+                <option value="B1">Método de instalación B1. Temp. ambiente 30°C</option>
+                <option value="B2">Método de instalación B2. Temp. ambiente 30°C</option>
+                <option value="D1">Método de instalación D1. Temp. ambiente 30°C</option>
+                <option value="D2">Método de instalación D2. Temp. ambiente 30°C</option>
+                <option value="E">Método de instalación E. Temp. ambiente 30°C</option>
+                <option value="F">Método de instalación F. Temp. ambiente 30°C</option>
+                </select>
+            </div>
+            <button type="button" onclick="calcularSeccion()">Calcular Sección</button>
+        </div>
+
+        <div id="resultado" class="hidden"></div>
+    </section>
 
     <script>
-        // Datos extraídos de la Tabla 4.4 del RIC N°04
-        const datosTabla4_4 = [
-            // Temperatura 70°C
-            { temp: 70, seccion_mm2: 1.5, A1: 14, B1: 16, E: 19 },
+        // --- BASE DE DATOS DE CONDUCTORES ---
+        const datosConductores = {
+            'H07V': {
+                nombre: 'H07V-U / H07V-R / H07V-K',
+                caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o recubierto  de una capa metálica; sólido clase 1, cableado clase 2, flexible clase 5, con aislación de policloruro de vinilo PVC/C.',
+                uso: 'Apto para ser instalado en ductos y molduras o bandejas tipo liviana en ambiente seco. En circuitos de baja tensión en instalaciones fijas.',
+                tempMax: '70 °C',
+                tension: '450/750 V',
+                aislamiento: 'PVC',
+                cubierta: 'No tiene',
+                tabla_ref: '70C'
+            },
+            'H07Z1': {
+                nombre: 'H07Z1-U / H07Z1-R / H07Z1-K',
+                caracteristicas: 'Conductor eléctrico unipolar aislado, sin cubierta, no propagador del incendio, libre de halógenos y con baja emisión de humos y gases corrosivos cuando están expuestos al fuego; construido de cobre recocido, desnudo o recubierto de una capa metálica; sólido clase 1, cableado clase 2 y flexible clase 5, con aislación de material termoplástico del tipo TI 7.',
+                uso: 'Apto para ser usado en lugares de reunión de personas. Puede ser instalado en ductos y molduras o bandejas tipo liviana. En circuitos de baja tensión en instalaciones fijas, en ambiente seco. No Puede ser utilizados como alimentador, ni subalimentador.',
+                tempMax: '70 °C',
+                tension: '450/750 V',
+                aislamiento: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos',
+                cubierta: 'No tiene',
+                tabla_ref: '70C'
+            },
+            'THHN': {
+                nombre: 'THHN',
+                caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado o comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+                uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+                tempMax: '90 °C',
+                tension: '600 V',
+                aislamiento: 'PVC',
+                cubierta: 'Nylon o similar',
+                tabla_ref: '90C'
+            },
+            'THWN-2': {
+                nombre: 'THWN-2',
+                caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado ó comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+                uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos y húmedos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+                tempMax: '90 °C',
+                tension: '600 V',
+                aislamiento: 'PVC',
+                cubierta: 'Nylon o similar',
+                tabla_ref: '70C'
+            },
+            'THWN': {
+                nombre: 'THWN',
+                caracteristicas: 'Conductor eléctrico unipolar, construido con cobre recocido, cableado, compactado ó comprimido; con aislación de policloruro de vinilo PVC, con cubierta o chaqueta de nylon.',
+                uso: 'Apto para ser instalado en ductos, molduras y bandejas (solo tipo THHN/TC a partir del calibre 1/0 AWG). En ambientes secos y húmedos. La cubierta lo hace resistente a la acción de aceites, grasas, ácidos y gasolina.',
+                tempMax: '75 °C',
+                tension: '600 V',
+                aislamiento: 'PVC',
+                cubierta: 'Nylon o similar',
+                tabla_ref: '70C'
+            },
+            'RV': {
+                nombre: 'RV',
+                caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla; construido de cobre recocido, desnudo o recubierto de una capa metálica; sólido clase 1 o cableado clase 2 cableado, con aislación de polietileno reticulado (XLPE) y cubierta termoplástica de cloruro de polivinilo (PVC) tipo ST2.',
+                uso: 'Apto para ser instalado en ductos, en bandejas, en canastillo, en escalerillas (solo tipo /TC) y al aire libre. En circuitos de distribución en baja tensión, como alimentador o subalimentador.',
+                tempMax: '90 °C',
+                tension: '600/1000 V',
+                aislamiento: 'XLPE',
+                cubierta: 'PVC',
+                tabla_ref: '90C'
+            },
+            'RV-K': {
+                nombre: 'RV-K',
+                caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de polietileno reticulado (XLPE) y cubierta termoplástica de cloruro de polivinilo (PVC) designación ST2.',
+                uso: 'Apto para ser instalado directamente enterrado, en ductos, en bandejas,en canastillo, en escalerillas (solo tipo /TC) y al aire libre. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para tendido fijo.',
+                tempMax: '90 °C',
+                tension: '600/1000 V',
+                aislamiento: 'XLPE',
+                cubierta: 'PVC',
+                tabla_ref: '90C'
+            },
+            'RZ1': {
+                nombre: 'RZ1',
+                caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla, retardante a la llama, no propagador de incendio, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; cableado, con aislación de polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos.',
+                uso: 'Apto para ser usado en lugares de reunión de personas.Puede ser instalado en ductos, en bandejas, en escalerillas en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador.',
+                tempMax: '90 °C',
+                tension: '600/1000 V',
+                aislamiento: 'XLPE',
+                cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+                tabla_ref: '90C'
+            },
+            'RZ1-K': {
+                nombre: 'RZ1-K',
+                caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla,retardante a la llama, no propagador de incendio, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos.',
+                uso: 'Apto para ser usado en lugares de reunión de personas. Puede ser instalado en ductos, en bandejas, en escalerillas, en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para instalación fija.',
+                tempMax: '90 °C',
+                tension: '600/1000 V',
+                aislamiento: 'XLPE',
+                cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+                tabla_ref: '90C'
+            },
+            'RZ1-K(AS+)': {
+                nombre: 'Rz1-k (AS+)',
+                caracteristicas: 'Conductor eléctrico unipolar o multipolar, sin armadura ni pantalla, retardante a la llama, no propagador de incendio, resistente al fuego, con baja emisión de gases tóxicos, baja opacidad de humos y bajo índice de acidez de los gases de combustión; construido de cobre recocido, desnudo o recubierto de una capa metálica; flexible clase 5, con aislación de cinta de mica y polietileno reticulado (XLPE) y cubierta de material termoplástico tipo ST8, libre de halógenos',
+                uso: 'Apto para instalaciones de equipos de seguridad que deban mantenerse en servicio durante un incendio y enlocales donde se requiera una baja emisión de humos y gases corrosivos en caso de incendio. Apto para instalaciones en lugares de reunión de personas. Puede ser instalado en ductos, en bandejas, en escalerillas, en canastillo, al aire libre y subterráneo. En circuitos de distribución en baja tensión, como alimentador o subalimentador flexible para instalación fija.',
+                tempMax: '90 °C',
+                tension: '600/1000 V',
+                aislamiento: 'Cinta Mica + XLPE',
+                cubierta: 'Termoplástico libre de halógenos, retardante a la llama, de baja emisión de humos.',
+                tabla_ref: '90C'
+            },
+            'H03VV': {
+                nombre: 'H03VV-F / H03VVH2-F',
+                caracteristicas: 'Conductor eléctrico tipo cordón flexible; circular o plano, construido con 2 o 3 conductores de cobre recocido, desnudo o recubierto de una capa metálica; clase 5, con aislación de policloruro de vinilo PVC/D para temperatura de servicio de 70 ºC, con cubierta o revestimiento de PVC/ST5 y rango de voltaje de 300/300 volts.',
+                uso: 'Apto para ser usado en instalaciones móviles domiciliarias y para alimentación de electrodomésticos con un esfuerzo mecánico ligero. Puede ser usado en interior, en recintos secos y/o húmedos (no apto para instalación fija o sumergido).',
+                tempMax: '70 °C',
+                tension: '300/300 V',
+                aislamiento: 'PVC',
+                cubierta: 'PVC',
+                tabla_ref: 'movil'
+            },
+            'H05VV': {
+                nombre: 'H05VV-F / H05VVH2-F',
+                caracteristicas: 'Conductor eléctrico tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de policloruro de vinilo PVC/D para temperatura de servicio de 70 ºC, con cubierta o revestimiento de PVC/ST5 y rango de voltaje de 300/500 volts.',
+                uso: 'Apto para ser usado en instalaciones móviles domiciliarias y para alimentación de electrodomésticos con un esfuerzo mecánico medio. Puede ser usado en interior, en recintos secos y/o húmedos (no apto para instalaciones sumergidas).',
+                tempMax: '70 °C',
+                tension: '300/500 V',
+                aislamiento: 'PVC',
+                cubierta: 'PVC',
+                tabla_ref: 'movil'
+            },
+            'H05RR': {
+                nombre: 'H05RR-F',
+                caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de goma tipo SE3.',
+                uso: 'Apto para ser usado en dispositivos eléctricos ligeros que no estén sometidos a grandes tensiones mecánicas, equipos de mano, electrodomésticos de uso ligero. Puede ser usado en salas secas y húmedas. Solo uso temporal en el exterior.No apto para instalaciones industriales/comerciales o agrícolas. No indicado para alimentar herramientas eléctricas industriales.',
+                tempMax: '60 °C',
+                tension: '300/500 V',
+                aislamiento: 'EPR, EPDM O similar',
+                cubierta: 'EPR, EPDM O similar',
+                tabla_ref: 'movil'
+            },
+            'H05RN': {
+                nombre: 'H05RN-F',
+                caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de policloropreno u otro elastómero sintético equivalente, tipo SE4.',
+                uso: 'Apto para alimentar dispositivos ligeros de bajo estrés mecánico. Puede ser usado permanentemente en el exterior, con esfuerzo mecánico normal.',
+                tempMax: '60 °C',
+                tension: '300/500 V',
+                aislamiento: 'EPR, EPDM O similar',
+                cubierta: 'Neopreno O similar',
+                tabla_ref: 'movil'
+            },
+            'H07RN': {
+                nombre: 'H07RN-F',
+                caracteristicas: 'Conductor eléctrico de formación tipo cordón flexible, construido con 2, 3, 4 o 5 conductores de cobre recocido, desnudo o recubierto de una capa metálica; cableados, clase 5, con aislación de compuesto de goma etileno-propileno o materiales equivalentes, tipo IE4; con cubierta o revestimiento de compuesto de policloropreno u otro elastómero sintético equivalente, tipo SE4.',
+                uso: 'Apto para ser usado en equipos industriales en servicio móvil, para esfuerzo mecánico medio. Puede ser usado en ambiente seco o húmedo así como exteriores. Puede ser usado en instalaciones provisionales.',
+                tempMax: '60 °C',
+                tension: '450/750 V',
+                aislamiento: 'EPR, EPDM O similar',
+                cubierta: 'Neopreno O similar',
+                tabla_ref: 'movil'
+            },
+            'NYIFY': {
+                nombre: 'NYIFY',
+                caracteristicas: 'Conductor eléctrico plano, construido con 2 o 3 conductores de cobre recocido sólidos, con aislación de PVC y cubierta de PVC para temperatura de servicio de 70 ºC, para un rango de voltaje de 380 volts máximo.',
+                uso: 'Apto para ser usado en instalaciones domiciliarias en ambientes interiores, sobrepuesto, no necesitan ducto.',
+                tempMax: '70 °C',
+                tension: '380 V',
+                aislamiento: 'PVC',
+                cubierta: 'PVC',
+                tabla_ref: '70C'
+            },
+            'STP': {
+                nombre: 'STP-1 / STP-2',
+                caracteristicas: 'Conductor eléctrico flexible; plano, construido con 2 o 3 conductores de cobre recocido, desnudo flexible, con aislación integral de policloruro de vinilo para temperatura de servicio de 70 ºC, para un rango de voltaje de 300 volts máximo.',
+                uso: 'Apto para ser usado en instalaciones móviles domiciliarias con un esfuerzo mecánico ligero.No puede ser usado en circuitos de instalación fija interior o exterior, no debe ser engrapado o clavado a las estructuras sólidas de la instalación o edificación, no debe ser usado en extensiones para enchufes',
+                tempMax: '70 °C',
+                tension: '300 V',
+                aislamiento: 'PVC',
+                cubierta: 'No tiene',
+                tabla_ref: 'movil'
+            },
+            'Acometidas': {
+                nombre: 'Acometidas',
+                caracteristicas: 'Conductor cableado o alambre de cobre de temple duro, clase 1, aislación de compuesto Polietileno extruido de color negro, y resistencia a la intemperie',
+                uso: 'En servicios aéreos como líneas de distribución y en acometidas de empalme',
+                tempMax: '75 °C',
+                tension: '600 V',
+                aislamiento: 'PE',
+                cubierta: 'No tiene',
+                tabla_ref: '70C'
+            },
+            'SF-1': {
+                nombre: 'SF-1',
+                caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o estañado; sólido o 7 hebras, cableado clase B, con aislación de silicona y malla de fibra de vidrio.',
+                uso: 'Cableado del Enclavamiento de Puertas de Montacargas, resistentes a las llamas y adecuados para una temperatura máxima de 200 °C',
+                tempMax: '200 °C',
+                tension: '300 V',
+                aislamiento: 'Silicona para temperatura de 200 °C',
+                cubierta: 'Malla fibra de vidrio',
+                tabla_ref: 'SinTabla'
+            },
+            'SF-2': {
+                nombre: 'SF-2',
+                caracteristicas: 'Conductor eléctrico unipolar, construido de cobre recocido, desnudo o estañado; sólido o 7 hebras, cableado clase B, con aislación de silicona y malla de fibra de vidrio.',
+                uso: 'Cableado del Enclavamiento de Puertas de Montacargas, resistentes a las llamas y adecuados para una temperatura máxima de 200 °C',
+                tempMax: '200 °C',
+                tension: '600 V',
+                aislamiento: 'Silicona para temperatura de 200 °C',
+                cubierta: 'Malla fibra de vidrio',
+                tabla_ref: 'SinTabla'
+            },
+            'H1Z2Z2': {
+                nombre: 'H1Z2Z2-K',
+                caracteristicas: 'Cables para instalaciones solares fotovoltaicas que han sido diseñados para resistir las exigentes condiciones ambientales que se producen en cualquier tipo de instalación fotovoltaica, ya sea fija, móvil, sobre tejado o de integración arquitectónica, conductor de cobre electrolítico estañado, clase 5 flexible, aislación libre de halógenos, cubierta ignifugada, resistencia a los impactos, a las grasas y aceites, resistencia a abrasión, resistencia a temperaturas ambientales extremas, rayos ultravioletas y al agua, No propagación de la llama Resistencia a los ataques químicos, Temperatura mínima de servicio: -40ºC Temperatura máxima del conductor: 120ºC Temperatura máxima en cortocircuito: 250ºC (máximo 5 s)',
+                uso: 'Cables flexibles aptos para servicios móviles y para instalación fija en tejado o de integración arquitectónica. Adecuados para la conexión entre paneles fotovoltaicos y desde los paneles al inversor de corriente continua a alterna. Nopuede ser usado en instalaciones Subterráneas.',
+                tempMax: '90 °C',
+                tension: '1800 V DC / 600 - 1000 V AC',
+                aislamiento: 'Elastómero termoestable libre de halógenos (Z) o Goma libre de halógenos (tipo XLEVA según UL / tipo EI6 según TÜV)',
+                cubierta: 'Elastómero termoestable libre de halógenos (Z) o Goma ignifugada (tipo XLEVA según UL / tipo EM8 según TÜV)',
+                tabla_ref: 'SinTabla'
+            }
+        };
+
+        // --- TABLAS DE CÁLCULO ---
+
+        const tablasDeCalculo = {
+            '70C': [{ temp: 70, seccion_mm2: 1.5, A1: 14, B1: 16, E: 19 },
             { temp: 70, seccion_mm2: 2.08, awg: 14, A1: 16, B1: 19, E: 22 },
             { temp: 70, seccion_mm2: 2.5, A1: 18, B1: 21, E: 24 },
             { temp: 70, seccion_mm2: 3.31, awg: 12, A1: 21, B1: 25, E: 30 },
@@ -197,20 +413,19 @@
             { temp: 70, seccion_mm2: 95, A1: 164, B1: 207, E: 238 },
             { temp: 70, seccion_mm2: 107.2, awg: "4/0", A1: 176, B1: 223, E: 257 },
             { temp: 70, seccion_mm2: 120, A1: 188, B1: 239, E: 276 },
-            { temp: 70, seccion_mm2: 126.7, kcmil: 250 , A1: 195, B1: 248, E: 286 },
+            { temp: 70, seccion_mm2: 126.7, kcmil: 250, A1: 195, B1: 248, E: 286 },
             { temp: 70, seccion_mm2: 150, A1: 216, B1: 262, E: 319 },
-            { temp: 70, seccion_mm2: 152, kcmil: 300 , A1: 217, B1: 264, E: 321 },
-            { temp: 70, seccion_mm2: 177.3, kcmil: 350 , A1: 239, B1: 289, E: 355 },
+            { temp: 70, seccion_mm2: 152, kcmil: 300, A1: 217, B1: 264, E: 321 },
+            { temp: 70, seccion_mm2: 177.3, kcmil: 350, A1: 239, B1: 289, E: 355 },
             { temp: 70, seccion_mm2: 185, A1: 245, B1: 296, E: 364 },
-            { temp: 70, seccion_mm2: 202.7, kcmil: 400 , A1: 259, B1: 315, E: 386 },
+            { temp: 70, seccion_mm2: 202.7, kcmil: 400, A1: 259, B1: 315, E: 386 },
             { temp: 70, seccion_mm2: 240, A1: 286, B1: 346, E: 430 },
-            { temp: 70, seccion_mm2: 253.3, kcmil: 500 , A1: 296, B1: 356, E: 446 },
-            { temp: 70, seccion_mm2: 300, A1: 328, B1: 394, E: 497 },
-            // Temperatura 90°C 
-            { temp: 90, seccion_mm2: 1.5, A1: 17, A2: 17, B1: 18, B2:19, D1: 19, D2: 23, E: 19 },
-            { temp: 90, seccion_mm2: 2.08, awg: 14, A1: 21, A2: 20, B1: 24, B2:24, D1: 30, D2: 31, E: 28},
-            { temp: 90, seccion_mm2: 2.5, A1: 23, A2: 22, B1: 24, B2:24, D1: 33, D2: 38, E: 32},
-            { temp: 90, seccion_mm2: 3.31, awg: 12, A1: 28, A2: 26, B1: 31, B2:31, D1: 38, D2: 39, E: 38 },
+            { temp: 70, seccion_mm2: 253.3, kcmil: 500, A1: 296, B1: 356, E: 446 },
+            { temp: 70, seccion_mm2: 300, A1: 328, B1: 394, E: 497 }],
+            '90C': [{ temp: 90, seccion_mm2: 1.5, A1: 17, A2: 17, B1: 18, B2: 19, D1: 19, D2: 23, E: 19 },
+            { temp: 90, seccion_mm2: 2.08, awg: 14, A1: 21, A2: 20, B1: 24, B2: 24, D1: 30, D2: 31, E: 28 },
+            { temp: 90, seccion_mm2: 2.5, A1: 23, A2: 22, B1: 24, B2: 24, D1: 33, D2: 38, E: 32 },
+            { temp: 90, seccion_mm2: 3.31, awg: 12, A1: 28, A2: 26, B1: 31, B2: 31, D1: 38, D2: 39, E: 38 },
             { temp: 90, seccion_mm2: 4, A1: 31, A2: 30, B1: 37, B2: 35, D1: 42, D2: 59, E: 42, F: 42 },
             { temp: 90, seccion_mm2: 5.26, awg: 10, A1: 37, A2: 35, B1: 39, B2: 38, D1: 48, D2: 69, E: 50, F: 50 },
             { temp: 90, seccion_mm2: 6, A1: 40, A2: 38, B1: 48, B2: 44, D1: 52, D2: 74, E: 54, F: 55 },
@@ -232,121 +447,195 @@
             { temp: 90, seccion_mm2: 95, A1: 216, A2: 197, B1: 269, B2: 233, D1: 232, D2: 339, E: 298, F: 342 },
             { temp: 90, seccion_mm2: 107.2, awg: "4/0", A1: 232, A2: 212, B1: 290, B2: 251, D1: 248, D2: 362, E: 322, F: 371 },
             { temp: 90, seccion_mm2: 120, A1: 249, A2: 227, B1: 312, B2: 268, D1: 263, D2: 386, E: 346, F: 400 },
-            { temp: 90, seccion_mm2: 126.7, kcmil: 250 , A1: 257, A2: 234, B1: 322, B2: 277, D1: 270, D2: 396, E: 358, F: 415 },
+            { temp: 90, seccion_mm2: 126.7, kcmil: 250, A1: 257, A2: 234, B1: 322, B2: 277, D1: 270, D2: 396, E: 358, F: 415 },
             { temp: 90, seccion_mm2: 150, A1: 285, A2: 259, B1: 342, B2: 300, D1: 296, D2: 431, E: 399, F: 464 },
-            { temp: 90, seccion_mm2: 152, kcmil: 300 , A1: 287, A2: 261, B1: 344, B2: 302, D1: 299, D2: 437, E: 402, F: 468 },
-            { temp: 90, seccion_mm2: 177.3, kcmil: 350 , A1: 316, A2: 287, B1: 374, B2: 331, D1: 325, D2: 474, E: 444, F: 518 },
+            { temp: 90, seccion_mm2: 152, kcmil: 300, A1: 287, A2: 261, B1: 344, B2: 302, D1: 299, D2: 437, E: 402, F: 468 },
+            { temp: 90, seccion_mm2: 177.3, kcmil: 350, A1: 316, A2: 287, B1: 374, B2: 331, D1: 325, D2: 474, E: 444, F: 518 },
             { temp: 90, seccion_mm2: 185, A1: 324, A2: 295, B1: 384, B2: 340, D1: 332, D2: 486, E: 456, F: 533 },
-            { temp: 90, seccion_mm2: 202.7, kcmil: 400 , A1: 342, A2: 312, B1: 405, B2: 358, D1: 349, D2: 510, E: 483, F: 567 },
+            { temp: 90, seccion_mm2: 202.7, kcmil: 400, A1: 342, A2: 312, B1: 405, B2: 358, D1: 349, D2: 510, E: 483, F: 567 },
             { temp: 90, seccion_mm2: 240, A1: 380, A2: 346, B1: 450, B2: 398, D1: 382, D2: 563, E: 538, F: 634 },
-            { temp: 90, seccion_mm2: 253.3, kcmil: 500 , A1: 392, A2: 357, B1: 464, B2: 410, D1: 393, D2: 576, E: 557, F: 657 },
-            { temp: 90, seccion_mm2: 300, A1: 435, A2: 396, B1: 514, B2: 455, D1: 431, D2: 629, E: 621, F: 736 },
+            { temp: 90, seccion_mm2: 253.3, kcmil: 500, A1: 392, A2: 357, B1: 464, B2: 410, D1: 393, D2: 576, E: 557, F: 657 },
+            { temp: 90, seccion_mm2: 300, A1: 435, A2: 396, B1: 514, B2: 455, D1: 431, D2: 629, E: 621, F: 736 }],
+            'movil': [{ seccion_mm2: 0.5, E: 3 },
+            { seccion_mm2: 0.75, E: 6 },
+            { seccion_mm2: 1, E: 10 },
+            { seccion_mm2: 1.5, E: 18.5 },
+            { seccion_mm2: 2.08, awg: 14, E: 22 },
+            { seccion_mm2: 2.5, E: 25 },
+            { seccion_mm2: 3.31, awg: 12, E: 30 },
+            { seccion_mm2: 4, E: 34 },
+            { seccion_mm2: 5.26, awg: 10, E: 40 },
+            { seccion_mm2: 6, E: 43 },
+            { seccion_mm2: 8.37, awg: 8, E: 53 },
+            { seccion_mm2: 10, E: 60 },
+            { seccion_mm2: 13.3, awg: 6, E: 71 },
+            { seccion_mm2: 16, E: 80 },
+            { seccion_mm2: 21.1, awg: 4, E: 91 },
+            { seccion_mm2: 25, E: 101 },
+            { seccion_mm2: 26.7, awg: 3, E: 106 },
+            { seccion_mm2: 33.6, awg: 2, E: 122 },
+            { seccion_mm2: 35, E: 126 },
+            { seccion_mm2: 42.4, awg: 1, E: 142 },
+            { seccion_mm2: 50, E: 153 },
+            { seccion_mm2: 53.5, awg: "1/0", E: 165 },
+            { seccion_mm2: 67.4, awg: "2/0", E: 191 },
+            { seccion_mm2: 70, E: 196 },
+            { seccion_mm2: 85, awg: "3/0", E: 222 },
+            { seccion_mm2: 95, E: 238 },
+            { seccion_mm2: 107.2, awg: "4/0", E: 257 },
+            { seccion_mm2: 120, E: 276 },
+            { seccion_mm2: 126.7, kcmil: 250, E: 286 },
+            { seccion_mm2: 150, E: 319 },
+            { seccion_mm2: 152, kcmil: 300, E: 321 },
+            { seccion_mm2: 177.3, kcmil: 350, E: 355 },
+            { seccion_mm2: 185, E: 364 },
+            { seccion_mm2: 202.7, kcmil: 400, E: 386 },
+            { seccion_mm2: 240, E: 430 },
+            { seccion_mm2: 253.3, kcmil: 500, E: 446 },
+            { seccion_mm2: 300, E: 497 }],
+        };
+        // --- LÓGICA DE LA APLICACIÓN ---
+        function actualizarMetodosInstalacion() {
+    const metodoSelect = document.getElementById('metodoInstalacion');
+    const selectedConductor = document.getElementById('conductorSelect').value;
+    if (!selectedConductor) return;
 
-            { temp: 30, seccion_mm2: 0.5, E:3 },
-            { temp: 30, seccion_mm2: 0.75, E:6 },
-            { temp: 30, seccion_mm2: 1, E:10 },
-            { temp: 30, seccion_mm2: 1.5, E:18.5 },
-            { temp: 30, seccion_mm2: 2.08, awg: 14, E:22 },
-            { temp: 30, seccion_mm2: 2.5, E:25 },
-            { temp: 30, seccion_mm2: 3.31, awg: 12, E:30 },
-            { temp: 30, seccion_mm2: 4, E:34 },
-            { temp: 30, seccion_mm2: 5.26, awg: 10, E:40 },
-            { temp: 30, seccion_mm2: 6, E: 43 },
-            { temp: 30, seccion_mm2: 8.37, awg: 8, E:53 },
-            { temp: 30, seccion_mm2: 10, E:60 },
-            { temp: 30, seccion_mm2: 13.3, awg: 6, E:71 },
-            { temp: 30, seccion_mm2: 16, E:80 },
-            { temp: 30, seccion_mm2: 21.1, awg: 4, E:91 },
-            { temp: 30, seccion_mm2: 25, E:101 },
-            { temp: 30, seccion_mm2: 26.7, awg: 3, E:106 },
-            { temp: 30, seccion_mm2: 33.6, awg: 2, E:122 },
-            { temp: 30, seccion_mm2: 35, E:126 },
-            { temp: 30, seccion_mm2: 42.4, awg: 1, E:142 },
-            { temp: 30, seccion_mm2: 50, E:153 },
-            { temp: 30, seccion_mm2: 53.5, awg: "1/0", E:165 },
-            { temp: 30, seccion_mm2: 67.4, awg: "2/0", E:191 },
-            { temp: 30, seccion_mm2: 70, E:196 },
-            { temp: 30, seccion_mm2: 85, awg: "3/0", E:222 },
-            { temp: 30, seccion_mm2: 95, E:238 },
-            { temp: 30, seccion_mm2: 107.2, awg: "4/0", E:257 },
-            { temp: 30, seccion_mm2: 120, E:276 },
-            { temp: 30, seccion_mm2: 126.7, kcmil: 250 , E:286 },
-            { temp: 30, seccion_mm2: 150, E:319 },
-            { temp: 30, seccion_mm2: 152, kcmil: 300 , E:321 },
-            { temp: 30, seccion_mm2: 177.3, kcmil: 350 , E:355 },
-            { temp: 30, seccion_mm2: 185, E:364 },
-            { temp: 30, seccion_mm2: 202.7, kcmil: 400 , E:386 },
-            { temp: 30, seccion_mm2: 240, E:430 },
-            { temp: 30, seccion_mm2: 253.3, kcmil: 500 , E:446 },
-            { temp: 30, seccion_mm2: 300, E:497 }
-        ];
-const tipoConductorSelect = document.getElementById('tipoConductor');
-        const metodoInstalacionSelect = document.getElementById('metodoInstalacion');
-        const metodosSolo90C = ['A2', 'B2', 'D1', 'D2', 'F'];
+    const conductor = datosConductores[selectedConductor];
+    if (!conductor) return;
 
-        function actualizarMetodos() {
-            const tempSeleccionada = tipoConductorSelect.value;
-            const opcionesMetodo = metodoInstalacionSelect.options;
+    // Si es móvil, solo opción E
+    if (conductor.tabla_ref === 'movil' ) {
+        metodoSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = 'E';
+        option.textContent = 'Método de instalación E. Temp. ambiente 30°C';
+        metodoSelect.appendChild(option);
+    } else {
+        metodoSelect.innerHTML = `
+                <option value="A1">Método de instalación A1. Temp. ambiente 30°C</option>
+                <option value="A2">Método de instalación A2. Temp. ambiente 30°C</option>
+                <option value="B1">Método de instalación B1. Temp. ambiente 30°C</option>
+                <option value="B2">Método de instalación B2. Temp. ambiente 30°C</option>
+                <option value="D1">Método de instalación D1. Temp. ambiente 30°C</option>
+                <option value="D2">Método de instalación D2. Temp. ambiente 30°C</option>
+                <option value="E">Método de instalación E. Temp. ambiente 30°C</option>
+                <option value="F">Método de instalación F. Temp. ambiente 30°C</option>
+        `;
+    }
+};
 
-            for (let i = 0; i < opcionesMetodo.length; i++) {
-                const opcion = opcionesMetodo[i];
-                if (metodosSolo90C.includes(opcion.value)) {
-                    if (tempSeleccionada === '70') {
-                        opcion.disabled = true;
-                        opcion.style.display = 'none';
-                    } else {
-                        opcion.disabled = false;
-                        opcion.style.display = 'block';
-                    }
-                }
+        document.addEventListener('DOMContentLoaded', () => {
+            const conductorSelect = document.getElementById('conductorSelect');
+            // Ordenar los nombres de los conductores alfabéticamente
+            const sortedConductorKeys = Object.keys(datosConductores).sort();
+
+            for (const key of sortedConductorKeys) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = datosConductores[key].nombre;
+                conductorSelect.appendChild(option);
             }
+        });
+function seleccionarConductor() {
+    // Obtener referencias a los elementos del DOM
+    const conductorSelect = document.getElementById('conductorSelect');
+    const detailsContainer = document.getElementById('conductor-details');
+    const calculoInputs = document.getElementById('calculo-inputs');
+    const metodoInstalacionWrapper = document.getElementById('metodo-instalacion-wrapper');
+    const resultadoContainer = document.getElementById('resultado');
 
-            // Si la opción seleccionada actualmente quedó deshabilitada, se vuelve a la primera.
-            if (metodoInstalacionSelect.options[metodoInstalacionSelect.selectedIndex].disabled) {
-                metodoInstalacionSelect.value = 'A1';
-            }
+    const selectedValue = conductorSelect.value;
+
+    // Ocultar el resultado anterior al cambiar la selección
+    resultadoContainer.classList.add('hidden');
+
+    // Si no se ha seleccionado ningún conductor, ocultar los detalles y salir
+    if (!selectedValue) {
+        detailsContainer.classList.add('hidden');
+        calculoInputs.classList.add('hidden');
+        return;
+    }
+
+    // Obtener los datos del conductor seleccionado
+    const conductorData = datosConductores[selectedValue];
+
+    // Mostrar la información básica del conductor
+    detailsContainer.innerHTML = `
+        <h3>${conductorData.nombre}</h3>
+                    <ul style="list-style-position: inside; padding-left: 0;">
+                        <li><strong>Características:</strong> ${conductorData.caracteristicas}</li>
+                        <li><strong>Uso Principal:</strong> ${conductorData.uso}</li>
+                        <li><strong>Temp. Máxima:</strong> ${conductorData.tempMax}</li>
+                        <li><strong>Aislamiento:</strong> ${conductorData.aislamiento}</li>
+                        <li><strong>Cubierta:</strong> ${conductorData.cubierta}</li>
+                        <li><strong>Tensión de Servicio:</strong> ${conductorData.tension}</li>
+                    </ul>
+    `;
+    detailsContainer.classList.remove('hidden');
+
+    // Verificar si el conductor tiene una tabla de cálculo asociada
+    const tieneTabla = conductorData.tabla_ref && conductorData.tabla_ref !== 'SinTabla';
+
+    if (tieneTabla) {
+        // Mostrar los inputs de cálculo
+        calculoInputs.classList.remove('hidden');
+
+        // Ocultar o mostrar el método de instalación según el tipo de conductor
+        if (conductorData.tipo === 'movil') {
+            metodoInstalacionWrapper.classList.add('hidden');
+        } else {
+            metodoInstalacionWrapper.classList.remove('hidden');
         }
+    } else {
+        // Si no tiene tabla, ocultar los inputs y mostrar un mensaje
+        calculoInputs.classList.add('hidden');
+        detailsContainer.innerHTML += '<p class="info-message">Este conductor no tiene una tabla de cálculo asociada.</p>';
+    }
 
-        tipoConductorSelect.addEventListener('change', actualizarMetodos);
-        // Llamar a la función al cargar la página para establecer el estado inicial
-        document.addEventListener('DOMContentLoaded', actualizarMetodos);
+    // Actualizar las opciones de métodos de instalación
+    actualizarMetodosInstalacion();
+}
+ function calcularSeccion() {
+    const selectedId = document.getElementById('conductorSelect').value;
+    const conductorInfo = datosConductores[selectedId];
+    const corrienteIngresada = parseFloat(document.getElementById('corriente').value);
+    const resultadoDiv = document.getElementById('resultado');
 
+    if (!corrienteIngresada || corrienteIngresada <= 0) {
+        resultadoDiv.innerHTML = "Por favor, ingrese un valor de corriente válido.";
+        resultadoDiv.classList.remove('hidden');
+        return;
+    }
 
-        function calcularSeccion() {
-            const tempServicio = parseInt(tipoConductorSelect.value);
-            const metodo = metodoInstalacionSelect.value;
-            const corrienteUsuario = parseFloat(document.getElementById('corriente').value);
-            const resultadoDiv = document.getElementById('resultado');
+    const tablaDeCalculo = tablasDeCalculo[conductorInfo.tabla_ref] || [];
+    const metodo = (conductorInfo.tipo === 'movil') ? 'E' : document.getElementById('metodoInstalacion').value;
+    
+    // Buscar el conductor adecuado
+    const seccionEncontrada = tablaDeCalculo.find(c => c[metodo] !== undefined && c[metodo] >= corrienteIngresada);
+    
+    if (seccionEncontrada) {
+        // Obtenemos la capacidad máxima de corriente de la sección encontrada
+        const corrienteMaximaSoportada = seccionEncontrada[metodo];
+        let textoAWG = seccionEncontrada.awg ? ` (${seccionEncontrada.awg} AWG)` : '';
+        let textoKcmil = seccionEncontrada.kcmil ? ` (${seccionEncontrada.kcmil} kcmil)` : '';
+        let textoEquivalente = textoAWG + textoKcmil;
+        let textoTabla = conductorInfo.tabla_ref === 'movil' ? ' (Ref. Tabla N° 4.5 Ric N° 04)' : '(Ref. Tabla N° 4.4 Ric N° 04)';
 
-            if (isNaN(corrienteUsuario) || corrienteUsuario <= 0) {
-                resultadoDiv.innerHTML = "Por favor, ingrese un valor de corriente válido.";
-                resultadoDiv.classList.remove('hidden');
-                return;
-            }
+        // Construir el nuevo texto de resultado
+        resultadoDiv.innerHTML = 
+        `<small>${textoTabla}</small><br>` +
+            `Para una corriente de <strong>${corrienteIngresada} A</strong>, la sección mínima es:<br>` +
+            `<strong style="font-size: 1.5em;">${seccionEncontrada.seccion_mm2} mm²${textoEquivalente}</strong><br>` +
+            `<small>Soportando una corriente máx. de: <strong>${corrienteMaximaSoportada} A</strong></small><br>`+
+            `<small><em>Nota: Siempre es recomendable verificar las condiciones específicas de instalación y considerar factores adicionales que puedan afectar la capacidad de corriente del conductor.</em></small>`;
+    } else {
+       resultadoDiv.innerHTML = `No se encontró un conductor adecuado para <strong>${corrienteIngresada} A</strong> con el método <strong>${metodo}</strong>. Verifique los valores o la corriente es demasiado alta.`;
+    }
+    
+    resultadoDiv.classList.remove('hidden');
+}
 
-            const conductoresFiltrados = datosTabla4_4.filter(c => c.temp === tempServicio);
-
-            let seccionEncontrada = null;
-            for (const conductor of conductoresFiltrados) {
-                // Se verifica que el método exista para ese conductor y que la corriente sea suficiente
-                if (conductor[metodo] !== undefined && conductor[metodo] >= corrienteUsuario) {
-                    seccionEncontrada = conductor;
-                    break;
-                }
-            }
-
-            if (seccionEncontrada) {
-                let textoAWG = seccionEncontrada.awg ? ` (${seccionEncontrada.awg} AWG)` : '';
-                let textoKcmil = seccionEncontrada.kcmil ? ` (${seccionEncontrada.kcmil} kcmil)` : '';
-                let textoEquivalente = textoAWG + textoKcmil;
-                
-                resultadoDiv.innerHTML = `Para una corriente de <strong>${corrienteUsuario} A</strong>, la sección mínima es:<br><strong style="font-size: 1.5em;">${seccionEncontrada.seccion_mm2} mm²${textoEquivalente}</strong>`;
-            } else {
-                resultadoDiv.innerHTML = `No se encontró un conductor adecuado para <strong>${corrienteUsuario} A</strong> con el método <strong>${metodo}</strong>. Verifique los valores o la corriente es demasiado alta.`;
-            }
-
-            resultadoDiv.classList.remove('hidden');
-        }
     </script>
 </body>
+
 </html>
